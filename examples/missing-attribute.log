@@ -1,0 +1,11 @@
+error:
+       ... while evaluating the attribute 'config.system.build.toplevel'
+         at /nix/store/example-source/lib/modules.nix:330:9:
+       ... while evaluating an option
+         at /etc/nixos/configuration.nix:12:5:
+       error: attribute 'gittt' missing
+       at /etc/nixos/configuration.nix:12:26:
+           11|   environment.systemPackages = with pkgs; [
+           12|     gittt
+             |     ^
+           13|   ];
