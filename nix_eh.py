@@ -41,7 +41,47 @@ def summarize(raw):
         if line.strip():
             details.append(line.rstrip())
     headline = headline or (details.pop(0).strip() if details else "Nix reported an error.")
-    nearby = tail + list(reversed(lines[:index]))
+
+    # Insecure-package refusals get a dedicated result that lists the Nixpkgs
+    # known issues instead of a generic headline.
+    insecure = re.search(
+        r"Package [‘'\"](.+?)[’'\"] in (.+?:\d+(?::\d+)?) is marked as insecure", headline
+    )
+    if insecure:
+        package, location = insecure.groups()
+        reasons = []
+        collecting = False
+        for line in tail:
+            if line.strip() == "Known issues:":
+                collecting = True
+                continue
+            if collecting and line.strip():
+                if not line.lstrip().startswith("- "):
+                    break
+                reasons.append(line.strip()[2:])
+        eol = any(re.search(r"\bEOL\b|end.of.life", reason, re.I) for reason in reasons)
+        summary = (
+            f"{package} is blocked because it is end-of-life."
+            if eol
+            else f"{package} is blocked because Nixpkgs marks it as insecure."
+        )
+        return {
+            "summary": summary,
+            "location": location,
+            "details": reasons or ["Nixpkgs refused to evaluate this package."],
+            "error_count": len(errors),
+            "category": "insecure-package",
+            "package": package,
+            "reasons": reasons,
+            # Overrides are mentioned only as a warning: they lift the block without
+            # removing the vulnerable package.
+            "suggestion": "Identify which app or dependency selects this package, then update or replace it. "
+            "This trace does not identify the dependent app. "
+            "The original log includes override instructions; these bypass the block and do not fix the issue.",
+        }
+
+    # Search the headline first, because some messages carry their location inline.
+    nearby = [headline] + tail + list(reversed(lines[:index]))
     location = next((m.group(1) for line in nearby if (m := LOCATION.search(line))), None)
 
     # Suggestions are keyword heuristics on the headline; they point at what to

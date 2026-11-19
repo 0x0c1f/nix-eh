@@ -30,6 +30,10 @@ so stdout remains usable. Successful read formatting returns zero even when
 the log describes a failure; use your shell's pipefail when the producer's
 exit status matters.
 
+Insecure-package summaries show the blocked package and stated issues. Trace
+references are investigation hints, not proof of which application caused the
+problem. No override or repair is run automatically.
+
 Limits and checks
 -----------------
 

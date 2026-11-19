@@ -1,0 +1,22 @@
+Run nix build '.#nixosConfigurations.nixos.config.system.build.toplevel'
+copying path '/nix/store/example-source' from 'https://cache.nixos.org'...
+error:
+       … while calling the 'head' builtin
+         at «github:NixOS/nixpkgs/ac62194»/lib/attrsets.nix:1571:13:
+       … while evaluating the option `system.build.toplevel':
+       … while evaluating the option `home-manager.users.nixos.xdg.configFile."fontconfig/conf.d/10-hm-fonts.conf".text':
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+       error: Package ‘electron-36.9.5’ in /nix/store/cyli3amcdixnmqny4z8nny8cq0bwxql0-source/pkgs/development/tools/electron/binary/generic.nix:43 is marked as insecure, refusing to evaluate.
+
+       Known issues:
+        - Electron version 36.9.5 is EOL
+
+       You can install it anyway by allowing this package, using the
+       following methods:
+       a) To temporarily allow all insecure packages:
+          $ export NIXPKGS_ALLOW_INSECURE=1
+          With a flake, pass --impure to allow environment variables.
+       b) Add to nixpkgs.config.permittedInsecurePackages:
+          { nixpkgs.config.permittedInsecurePackages = [ "electron-36.9.5" ]; }
+       c) For legacy commands, add permittedInsecurePackages to ~/.config/nixpkgs/config.nix.
+Error: Process completed with exit code 1.
