@@ -6,15 +6,16 @@ Put the useful part of a Nix error first, with the original output still availab
 Run
 ---
 
-Requires Python, with no third-party packages. From this folder:
+From this complete source folder on a Nix host:
 
-   python3 nix_eh.py read /tmp/nix-error.log
-   python3 nix_eh.py --full read /tmp/nix-error.log
-   python3 nix_eh.py --json read /tmp/nix-error.log
-   python3 nix_eh.py run -- nix build --show-trace
+   nix run path:. -- read /tmp/nix-error.log
+   nix run path:. -- --full read /tmp/nix-error.log
+   nix run path:. -- --json read /tmp/nix-error.log
+   nix run path:. -- run -- nix build --show-trace
 
-Nix must already be installed to wrap real Nix commands; reading a saved
-log does not require it.
+Nix provides Python automatically. Enable nix-command and flakes, or pass
+--extra-experimental-features "nix-command flakes" to Nix. A first run may
+fetch or build dependencies. Keep the complete source folder and lock files together.
 
 Read or wrap a command
 ----------------------
@@ -46,3 +47,4 @@ Run interactive commands directly and format their saved logs instead. Native
 Nix builds, activation and terminal behaviour are not established by fixture tests.
 
 Run source regression checks with python3 -B -m unittest -v.
+On a Nix host, nix flake check path:. runs the configured package checks.

@@ -1,2 +1,6 @@
+# `nix build` leaves result symlinks in the checkout.
+/result
+/result-*
+
 # Python caches from running the tests.
 __pycache__/
